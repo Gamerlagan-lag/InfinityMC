@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 7.1.4.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="00:00:00"/>
+	<style type="text/css">
+		@page { size: 8.5in 11in; margin: 0.79in }
+		p { margin-bottom: 0.1in; line-height: 115%; background: transparent }
+		pre { font-family: "Liberation Mono", monospace; font-size: 10pt; background: transparent }
+	</style>
+</head>
+<body lang="en-US" link="#000080" vlink="#800000" dir="ltr"><pre>&lt;?php
+/**
+ * PHPMailer Exception class.
+ * PHP Version 5.5.
+ *
+ * @see       https://github.com/PHPMailer/PHPMailer/ The PHPMailer GitHub project
+ *
+ * @author    Marcus Bointon (Synchro/coolbru) &lt;phpmailer@synchromedia.co.uk&gt;
+ * @author    Jim Jagielski (jimjag) &lt;jimjag@gmail.com&gt;
+ * @author    Andy Prevost (codeworxtech) &lt;codeworxtech@users.sourceforge.net&gt;
+ * @author    Brent R. Matzelle (original founder)
+ * @copyright 2012 - 2017 Marcus Bointon
+ * @copyright 2010 - 2012 Jim Jagielski
+ * @copyright 2004 - 2009 Andy Prevost
+ * @license   http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
+ * @note      This program is distributed in the hope that it will be useful - WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.
+ */
+
+namespace PHPMailer\PHPMailer;
+
+/**
+ * PHPMailer exception handler.
+ *
+ * @author Marcus Bointon &lt;phpmailer@synchromedia.co.uk&gt;
+ */
+class Exception extends \Exception
+{
+    /**
+     * Prettify error message output.
+     *
+     * @return string
+     */
+    public function errorMessage()
+    {
+        return '&lt;strong&gt;' . htmlspecialchars($this-&gt;getMessage()) . &quot;&lt;/strong&gt;&lt;br /&gt;\n&quot;;
+    }
+}</pre>
+</body>
+</html>

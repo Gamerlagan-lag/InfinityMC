@@ -1,0 +1,294 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 7.1.4.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="00:00:00"/>
+	<style type="text/css">
+		@page { size: 8.5in 11in; margin: 0.79in }
+		p { margin-bottom: 0.1in; line-height: 115%; background: transparent }
+		pre { font-family: "Liberation Mono", monospace; font-size: 10pt; background: transparent }
+	</style>
+</head>
+<body lang="en-US" link="#000080" vlink="#800000" dir="ltr"><pre>&lt;!-- Made with love by 16YELDARB --&gt;
+&lt;!-- https://www.spigotmc.org/members/16yeldarb.36673/ --&gt;
+
+&lt;?php 
+
+include 'config.php'; 
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+require 'assets/PHPMailer/Exception.php';
+require 'assets/PHPMailer/PHPMailer.php';
+require 'assets/PHPMailer/SMTP.php';
+
+if(($ssl == true) &amp;&amp; ($_SERVER[&quot;HTTPS&quot;] != &quot;on&quot;)) {
+    header(&quot;Location: https://&quot; . $_SERVER[&quot;HTTP_HOST&quot;] . $_SERVER[&quot;REQUEST_URI&quot;]);
+    exit();
+}
+
+?&gt;
+
+
+&lt;html&gt;
+
+&lt;head&gt;
+	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+	&lt;title&gt;&lt;?php echo $pagetitle;?&gt;&lt;/title&gt;
+	&lt;link href=&quot;assets/img/favicon-16x16.png&quot; rel=&quot;icon&quot; sizes=&quot;16x16&quot; type=&quot;image/png&quot;&gt;
+	&lt;link href=&quot;https://fonts.googleapis.com/css?family=Raleway&quot; rel=&quot;stylesheet&quot;&gt;
+	&lt;link rel=&quot;stylesheet&quot; href=&quot;assets/css/animate.css&quot;&gt;
+	&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;assets/css/style-&lt;?php echo $theme; ?&gt;.css&quot;&gt;
+	&lt;script src='https://www.google.com/recaptcha/api.js'&gt;&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+
+
+&lt;div class=&quot;logocontainer&quot;&gt;
+
+	&lt;a href=&quot;&lt;?php echo $logolink;?&gt;&quot;&gt;&lt;img src=&quot;assets/img/logo.png&quot; class=&quot;logo&quot;/&gt;&lt;/a&gt;
+
+&lt;/div&gt;
+
+&lt;?php
+
+$version = 1.11;
+$versionget = file_get_contents('http://mcba.xyz/index/spigotunbanversion.txt');
+
+//Custom emails:
+$stmpmail = new PHPMailer;
+$stmpmail = new PHPMailer;
+$stmpmail-&gt;isSMTP(); 
+if ($customemaildebug == true) {$stmpmail-&gt;SMTPDebug = 2; } else { $stmpmail-&gt;SMTPDebug = 0; }
+$stmpmail-&gt;Host = $customemailhost;
+$stmpmail-&gt;Port = $customemailport;
+if ($custommailsecure == true) { $stmpmail-&gt;SMTPSecure = 'tls'; } else { $stmpmail-&gt;SMTPSecure = false; $stmpmail-&gt;SMTPAutoTLS = false; }
+$stmpmail-&gt;SMTPAuth = true;
+$stmpmail-&gt;Username = $customemailusername;
+$stmpmail-&gt;Password = $customemailpass;
+
+//For non-custom emails:
+$emailheaders = &quot;MIME-Version: 1.0&quot; . &quot;\r\n&quot;;
+$emailheaders .= &quot;Content-type:text/html;charset=UTF-8&quot; . &quot;\r\n&quot;;
+$appealreplyheaders = $emailheaders . &quot;From: &quot; . $sendfrom . &quot;\r\n&quot;;
+
+if(isset($_GET[&quot;accept&quot;])) {
+
+    if ($_GET['key'] == $replykey) {
+
+    	echo &quot;&lt;div class='return' style='background-color:green'&gt;Accepted appeal E-Mail sent.&lt;/div&gt;&quot;;
+		
+		if ($customemail == false) {
+
+			mail($_GET[&quot;accept&quot;],$appealacceptedsubject,$appealaccepted,$appealreplyheaders);
+
+		} else {
+
+			$stmpmail-&gt;setFrom($customemailusername, &quot;MC Ban Appeal&quot;);
+			$stmpmail-&gt;addAddress($_GET[&quot;accept&quot;], $_GET['username']);
+			$stmpmail-&gt;isHTML(true);
+			$stmpmail-&gt;Subject = $appealacceptedsubject;
+			$stmpmail-&gt;Body    = $appealaccepted;
+    		$stmpmail-&gt;AltBody = $appealaccepted;
+			$stmpmail-&gt;send();
+
+		}
+    	
+    	$unbanlist = fopen(&quot;tounban.txt&quot;, &quot;a+&quot;);
+    	fwrite($unbanlist, strtolower($_GET['username']) . &quot;\n&quot;);
+    	fclose($unbanlist);
+
+    } else {
+
+    	echo &quot;&lt;div class='return' style='background-color:red'&gt;Admin key is incorrect&lt;/div&gt;&quot;;
+
+    }
+	
+
+} else if (isset($_GET[&quot;deny&quot;])) {
+	
+    if ($_GET['key'] == $replykey) {
+
+		echo &quot;&lt;div class='return' style='background-color:green'&gt;Rejected appeal E-Mail sent.&lt;/div&gt;&quot;;
+		
+    	if ($customemail == false) {
+
+			mail($_GET[&quot;deny&quot;],$appealdeniedsubject,$appealdenied,$appealreplyheaders);
+
+		} else {
+
+			$stmpmail-&gt;setFrom($customemailusername, &quot;MC Ban Appeal&quot;);
+			$stmpmail-&gt;addAddress($_GET[&quot;deny&quot;], $_GET['username']);
+			$stmpmail-&gt;isHTML(true);
+			$stmpmail-&gt;Subject = $appealdeniedsubject;
+			$stmpmail-&gt;Body    = $appealdenied;
+    		$stmpmail-&gt;AltBody = $appealdenied;
+			$stmpmail-&gt;send();
+
+		}
+
+    	$unbanlist = fopen(&quot;tounban.txt&quot;, &quot;r+&quot;) or die (fopen(&quot;tounban.txt&quot;, &quot;w&quot;));
+
+    	while(! feof($unbanlist)) {
+
+    		$listedusername = fgets($unbanlist);
+    		$listedusername = trim($listedusername);
+ 			if (strtolower($_GET[&quot;username&quot;]) == $listedusername) { 
+
+ 				$contents = file_get_contents(&quot;tounban.txt&quot;);
+				$removeline = str_replace($listedusername, '', $contents);
+				file_put_contents(&quot;tounban.txt&quot;, $removeline);
+
+ 			}
+
+  		}
+
+  		fclose($unbanlist);
+
+    } else {
+
+    	echo &quot;&lt;div class='return' style='background-color:red'&gt;Admin key is incorrect&lt;/div&gt;&quot;;
+
+    }
+
+}
+
+//It is recommended you don't edit the below unless you're familiar with php
+//Below is the core code for the E-Mail/Form system
+
+function submittedForm($successnotice, $stmpmail, $customemail, $customemailusername, $customemaildelay, $minecrafthead, $provideip, $providelocation, $providetime, $providedate, $version, $versionget, $sendto, $sendfrom, $sendconfirmation, $checkupdate, $confirmsubject, $confirmmsg, $replykey, $acceptbutton, $denybutton, $emailheaders, $appealreplyheaders, $appealoptions) {
+
+	$username = htmlspecialchars($_POST['username']);
+	$reason = htmlspecialchars($_POST['reason']);
+	if ($appealoptions == true){$appealoption = htmlspecialchars($_POST['appealoption']);}else{$appealoption = &quot;Ban&quot;;};
+
+    $emailbodyextra = &quot;&quot; . file_get_contents('http://mcba.xyz/index/emailbodyextra.txt');
+	$successextra = &quot;&quot;; //Here for later updates
+
+	echo $successnotice . $successextra;
+
+	$ip = $_SERVER['REMOTE_ADDR'];
+	$location = json_decode(file_get_contents(&quot;http://ipinfo.io/{$ip}&quot;));
+
+	$headers = $emailheaders . &quot;From: &quot; . $_POST['email'] . &quot;\r\n&quot;;
+
+	if ($minecrafthead == true){$emailimage = &quot;&lt;img src='https://cravatar.eu/helmhead/&quot; . $username . &quot;' width='90px'/&gt;&lt;br&gt;&quot;;}else{$emailimage = &quot;&quot;;}
+	$emailbody = $emailimage . &quot;&lt;strong&gt;&quot; . $username . &quot;&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;strong&gt;Appealing:&lt;/strong&gt;&lt;br&gt;&quot; . $appealoption . &quot;&lt;br&gt;&lt;br&gt;&lt;strong&gt;Reason:&lt;/strong&gt;&lt;br&gt;&quot; . $reason . &quot;&lt;br&gt;&lt;br&gt;----------------------------------------&quot;;
+	$emailbody = str_replace(&quot;\n.&quot;, &quot;\n..&quot;, $emailbody);
+
+	if ($provideip == true){$emailbody .= &quot;&lt;br&gt;&lt;br&gt;&lt;strong&gt;IP Address:&lt;/strong&gt; &quot; . $ip;}
+	if ($providelocation == true){$emailbody .= &quot;&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt; &quot; . $location-&gt;country;}
+	if ($providetime == true){$emailbody .= &quot;&lt;br&gt;&lt;strong&gt;Time Submitted:&lt;/strong&gt; &quot; . date(&quot;h:i:sa&quot;);}
+	if ($providedate == true){$emailbody .= &quot;&lt;br&gt;&lt;strong&gt;Date Submitted:&lt;/strong&gt; &quot; . date(&quot;Y/m/d&quot;);}
+	if (($version &lt; $versionget) &amp;&amp; $checkupdate == true) {$versionoutwarning = &quot;&lt;br&gt;&lt;br&gt;&lt;strong&gt;Your current version of MC Ban Appeal is out of date!&lt;br&gt;Please get the new version here: &lt;a href='https://goo.gl/Xjavfs'&gt;https://goo.gl/Xjavfs&lt;/a&gt;&quot;;}else{$versionoutwarning = &quot;&quot;;}
+	if ($acceptbutton == true){$emailbody .= &quot;&lt;br&gt;&lt;br&gt;&lt;a href='http://&quot; . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . &quot;?accept=&quot; . $_POST['email'] . &quot;&amp;username=&quot; . $_POST['username'] . &quot;&amp;key=&quot; . $replykey . &quot;'&gt;&lt;img src='https://i.imgur.com/lm867A1.png' style='width: 114px; height: 29px;'/&gt;&lt;/a&gt;&quot;;}
+	if ($denybutton == true){$emailbody .= &quot; &lt;a href='http://&quot; . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . &quot;?deny=&quot; . $_POST['email'] . &quot;&amp;username=&quot; . $_POST['username'] . &quot;&amp;key=&quot; . $replykey . &quot;'&gt;&lt;img src='https://i.imgur.com/AlyMFBm.png'/&gt;&lt;/a&gt;&quot;;}
+	
+	
+	if ($customemail == false) {
+
+		mail($sendto,&quot;Unban Appeal&quot;,$emailbody . $versionoutwarning . $emailbodyextra,$headers);
+		if ($sendconfirmation == true){mail($_POST['email'],$confirmsubject,$confirmmsg,$appealreplyheaders);}
+
+	} else {
+
+		if ($sendconfirmation == true) {
+
+			$stmpmail-&gt;setFrom($customemailusername, &quot;MC Ban Appeal&quot;);
+			$stmpmail-&gt;addAddress($_POST['email'], $_POST['email']);
+			$stmpmail-&gt;isHTML(true);
+			$stmpmail-&gt;Subject = $confirmsubject;
+			$stmpmail-&gt;Body    = $confirmmsg;
+    		$stmpmail-&gt;AltBody = $confirmmsg;
+			$stmpmail-&gt;send();
+			$stmpmail-&gt;ClearAllRecipients();
+
+			sleep($customemaildelay);
+
+		}
+
+		$stmpmail-&gt;setFrom($_POST['email'], $_POST['email']);
+		$stmpmail-&gt;addAddress($customemailusername, $customemailusername);
+		$stmpmail-&gt;isHTML(true);
+    	$stmpmail-&gt;Subject = 'MC Unban Appeal';
+    	$stmpmail-&gt;Body    = $emailbody . $versionoutwarning . $emailbodyextra;
+    	$stmpmail-&gt;AltBody = $emailbody . $versionoutwarning . $emailbodyextra;
+		$stmpmail-&gt;send();
+
+	}
+
+}
+
+if(isset($_POST['submit'])){
+
+	if ($captcha == true) {
+
+		$sender_username = stripslashes($_POST[&quot;username&quot;]);
+		$sender_email = stripslashes($_POST[&quot;email&quot;]);
+		$sender_reason = stripslashes($_POST[&quot;reason&quot;]);
+		$response = $_POST[&quot;g-recaptcha-response&quot;];
+		$url = 'https://www.google.com/recaptcha/api/siteverify';
+		$data = array(
+			'secret' =&gt; $secretkey,
+			'response' =&gt; $_POST[&quot;g-recaptcha-response&quot;]
+		);
+		$options = array(
+			'http' =&gt; array (
+				'method' =&gt; 'POST',
+				'content' =&gt; http_build_query($data)
+			)
+		);
+		$context  = stream_context_create($options);
+		$verify = file_get_contents($url, false, $context);
+		$captcha_success=json_decode($verify);
+
+		if ($captcha_success-&gt;success==false) {
+
+			echo &quot;&lt;div class='return' style='background-color:red'&gt;CAPTCHA Failed. &lt;a href='index.php' style='color:white;'&gt;Click to retry&lt;/a&gt;&lt;/div&gt;&quot;;
+
+		} else if ($captcha_success-&gt;success==true) {
+
+			// Security / Valid Email Check
+			$email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+
+			if ($email === FALSE) {
+
+    			echo &quot;&lt;div class='return' style='background-color:red'&gt;Invalid E-Mail. Failed to submit ban appeal. Click the back button to go back.&lt;/div&gt;&quot;;
+    		
+			} else {
+
+				submittedForm($successnotice, $stmpmail, $customemail, $customemailusername, $customemaildelay, $minecrafthead, $provideip, $providelocation, $providetime, $providedate, $version, $versionget, $sendto, $sendfrom, $sendconfirmation, $checkupdate, $confirmsubject, $confirmmsg, $replykey, $acceptbutton, $denybutton, $emailheaders, $appealreplyheaders, $appealoptions);
+		
+			}
+		}
+	} else {
+
+		$email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+
+		if ($email === FALSE) {
+
+    		echo &quot;&lt;div class='return' style='background-color:red'&gt;Invalid E-Mail. Failed to submit ban appeal.&lt;/div&gt;&quot;;
+    		
+		} else {
+
+			submittedForm($successnotice, $stmpmail, $customemail, $customemailusername, $customemaildelay, $minecrafthead, $provideip, $providelocation, $providetime, $providedate, $version, $versionget, $sendto, $sendfrom, $sendconfirmation, $checkupdate, $confirmsubject, $confirmmsg, $replykey, $acceptbutton, $denybutton, $emailheaders, $appealreplyheaders, $appealoptions);
+		
+		}
+	}
+}
+
+?&gt;
+
+&lt;/body&gt;
+
+
+&lt;/html&gt;
+
+&lt;!-- Covered by the MIT License Copyright (c) 2020 16YELDARB --&gt;</pre>
+</body>
+</html>

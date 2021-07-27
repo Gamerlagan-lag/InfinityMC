@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 7.1.4.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="00:00:00"/>
+	<style type="text/css">
+		@page { size: 8.5in 11in; margin: 0.79in }
+		p { margin-bottom: 0.1in; line-height: 115%; background: transparent }
+		pre { font-family: "Liberation Mono", monospace; font-size: 10pt; background: transparent }
+	</style>
+</head>
+<body lang="en-US" link="#000080" vlink="#800000" dir="ltr"><pre>&lt;!-- Made with love by 16YELDARB --&gt;
+&lt;!-- https://www.spigotmc.org/members/16yeldarb.36673/ --&gt;
+
+&lt;!-- Rename this file to change it from 'blank-page', keep .php at the end! - you can also duplicate it to make more pages --&gt;
+&lt;!-- You can disable this file in the config --&gt;
+
+&lt;!DOCTYPE html&gt;
+
+&lt;?php 
+
+include 'config.php'; 
+
+if ($blankpage == false) {
+
+	header('Location: index.php');
+	exit;
+
+}
+
+if(($ssl == true) &amp;&amp; ($_SERVER[&quot;HTTPS&quot;] != &quot;on&quot;)) {
+    header(&quot;Location: https://&quot; . $_SERVER[&quot;HTTP_HOST&quot;] . $_SERVER[&quot;REQUEST_URI&quot;]);
+    exit();
+}
+
+?&gt;
+
+&lt;html&gt;
+
+&lt;head&gt;
+	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+	&lt;title&gt;&lt;?php echo $pagetitle;?&gt;&lt;/title&gt;
+	&lt;link href=&quot;assets/img/favicon-16x16.png&quot; rel=&quot;icon&quot; sizes=&quot;16x16&quot; type=&quot;image/png&quot;&gt;
+	&lt;link href=&quot;https://fonts.googleapis.com/css?family=Raleway&quot; rel=&quot;stylesheet&quot;&gt;
+	&lt;link rel=&quot;stylesheet&quot; href=&quot;assets/css/animate.css&quot;&gt;
+	&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;assets/css/style-&lt;?php echo $theme; ?&gt;.css&quot;&gt;
+	&lt;script src='https://www.google.com/recaptcha/api.js'&gt;&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+
+
+&lt;div class=&quot;logocontainer&quot;&gt;
+
+	&lt;a href=&quot;&lt;?php echo $logolink;?&gt;&quot;&gt;&lt;img src=&quot;assets/img/logo.png&quot; class=&quot;logo&quot; alt=&quot;Logo&quot;/&gt;&lt;/a&gt;
+
+&lt;/div&gt;
+
+&lt;div class=&quot;boxheader&quot;&gt;
+
+	&lt;h1&gt;Blank Page&lt;/h1&gt;
+	&lt;h2&gt;This is a blank page.&lt;/h2&gt;
+
+&lt;/div&gt;
+
+&lt;div class=&quot;box&quot;&gt;
+
+	&lt;div class=&quot;mobileheader&quot;&gt;
+
+		&lt;h1&gt;Blank Page&lt;/h1&gt;
+		&lt;h2&gt;This is a blank page.&lt;/h2&gt;
+		
+	&lt;/div&gt;
+
+	&lt;!-- Rename this file to change it from 'blank-page', keep .php at the end! - you can also duplicate it to make more pages --&gt;
+	&lt;!-- You can disable this file in the config --&gt;
+
+	&lt;p&gt;Put whatever you want here!&lt;/p&gt;
+
+	&lt;p&gt;Like a second paragraph...&lt;/p&gt;
+
+&lt;/div&gt;
+
+
+
+&lt;/body&gt;
+
+
+&lt;/html&gt;
+
+&lt;!-- Covered by the MIT License Copyright (c) 2018 16YELDARB --&gt;</pre>
+</body>
+</html>
